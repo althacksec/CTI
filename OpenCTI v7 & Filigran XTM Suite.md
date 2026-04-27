@@ -109,3 +109,7 @@ OpenCTI, STIX 2.1 ve TAXII 2.1 standartlarını destekliyor; bu, ABD CISA'nın A
 | 5 | OpenCTI Dokümantasyonu              | Teknik Dok.      | [https://docs.opencti.io/latest/](https://docs.opencti.io/latest/) |
 | 6 | Chrome Web Store — Uzantı           | İndirme          | [https://chromewebstore.google.com/detail/filigran-extended-threat/ilblgjdkbijkefhfdhofhblkleagmabg](https://chromewebstore.google.com/detail/filigran-extended-threat/ilblgjdkbijkefhfdhofhblkleagmabg) |
 | 7 | OpenCTI LTS Release Notes           | Changelog        | [https://github.com/OpenCTI-Platform/opencti/releases](https://github.com/OpenCTI-Platform/opencti/releases) |
+
+---
+
+© 2025 AltHack Security — Gerçek Dünya Siber Güvenlik İstihbaratı
