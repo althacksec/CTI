@@ -1,13 +1,6 @@
 # Teknik Güvenlik Analiz Raporu: MISP Workbench v1.0 (v2.5.35)
 
-**Rapor Tarihi:** 24 Mayıs 2024  
-**Analist:** Senior CTI Analyst  
-**Konu:** MISP-v2.5.t35-+-MISP-Workbench-v1.0 Altyapı Güvenlik Profili  
-**Sınıflandırma:** Internal / Confidential  
-
----
-
-## 1. Genel Bakış (Overview)
+## 1. Genel Bakış 
 * **CTI Konusu / Varlık Adı:** MISP Workbench v1.0 (MISP v2.5.35 tabanlı)
 * **Kategori:** Security Infrastructure / Threat Intelligence Platform (TIP)
 * **Durum:** Active (Deployment/Lab Environment)
@@ -47,7 +40,7 @@ MISP Workbench v1.0, MISP v2.5.35'in üzerine eklenmiş otomatize edilmiş bir k
 * **T1566 (Phishing):** Platform üzerinden gönderilen sahte uyarılar.
 * **T1071 (Application Layer Protocol):** API üzerinden veri sızdırma.
 
-## 6. Saldırı Zinciri (Kill Chain Analizi - Platform Suistimali Senaryosu)
+## 6. Saldırı Zinciri 
 Saldırganın bu platformu hedef alması durumunda izleyebileceği yol:
 
 1.  **Initial Access:** Zayıf yapılandırılmış web arayüzü (v1.0 Workbench UI) üzerinden brute-force veya zafiyetli bir plugin kullanımı.
@@ -63,12 +56,12 @@ Bu tür bir platformu hedef alan aktörler genellikle:
 **
 ## 8. Tespit ve Önleme Stratejileri
 
-### **Tespit (Detection)**
+### **Tespit**
 * **Log Analizi:** MISPI veya web sunucu loglarında olağandışı API çağrıları ve başarısız giriş denemelerinin takibi.
 * **Anomali Tespiti:** Veri hacmindeki ani artışlar (Egress trafiği analizi).
 * **Integrity Monitoring:** Platform dosyalarının (config, python scripts) değiştirilip değiştirilmediğinin izlenmesi.
 
-### **Önleme (Prevention)**
+### **Önleme**
 * **Network Segmentation:** MISPI/MISP instance'ının internete doğrudan açık olmaması, sadece VPN/ZTNA üzerinden erişilmesi.
 * **Least Privilege:** API anahtarlarının ve kullanıcı yetkilerinin "en az yetki" prensibiyle yapılandırılması.
 * **Hardening:** Docker container'ların ve alt servislerin (MariaDB, Redis) güvenlik sıkılaştırmasının yapılması.
