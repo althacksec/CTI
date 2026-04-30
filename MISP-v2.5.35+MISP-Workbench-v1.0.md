@@ -1,4 +1,4 @@
-# 🛡️ Teknik Güvenlik Analiz Raporu: MISP Workbench v1.0 (v2.5.35)
+# Teknik Güvenlik Analiz Raporu: MISP Workbench v1.0 (v2.5.35)
 
 **Rapor Tarihi:** 24 Mayıs 2024  
 **Analist:** Senior CTI Analyst  
