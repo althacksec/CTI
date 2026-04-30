@@ -1,4 +1,4 @@
-# Siber Tehdit İstihbaratı Altyapı Analiz Raporu: OpenCTI-t7 & Filigran XTM Suite
+# OpenCTI-t7 & Filigran XTM Suite
 
 ### 1. Genel Bakış 
 * **CTI Konusu:** OpenCTI-v7 & Filigran XTM Suite (Güvenlik Altyapısı/Platformu)
