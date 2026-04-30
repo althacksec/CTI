@@ -1,4 +1,4 @@
-# Teknik Güvenlik Analiz Raporu: MISP Workbench v1.0 (v2.5.35)
+# MISP Workbench v1.0 (v2.5.35)
 
 ## 1. Genel Bakış 
 * **CTI Konusu / Varlık Adı:** MISP Workbench v1.0 (MISP v2.5.35 tabanlı)
