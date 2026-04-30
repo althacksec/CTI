@@ -1,118 +1,89 @@
-# MCP Sunucuları ile AI Destekli CTI — Fırsatlar ve Yeni Saldırı Yüzeyi
+# MCP-Sunucuları ile AI-Destekli CTI
 
-**Tarih:** Nisan 2026  
-**Konu:** Model Context Protocol (MCP) + CTI Entegrasyonu  
-**Etkilenen Araçlar:** MISP, VirusTotal, AbuseIPDB, GreyNoise, Feodo Tracker  
-**Kategori:** CTI Operasyonu | Agentic AI | Yeni Tehdit Vektörü  
-**Durum:** Aktif Benimseme — Güvenlik Riskleri Belgeleniyor ✔
+## 1. Genel Bakış 
+* **CTI Konusu:** MCP-Sunucuları ile AI-Destekli CTI Mimarileri ve Güvenlik İmplikasyonları
+* **Kategori:** Emerging Technology / New Attack Surface / AI Security
+* **Durum:** Emerging (Gelişmekte olan teknoloji ve yeni risk alanı)
 
-## Özet
+## 2. Teknik Özet
+Model Context Protocol (MCP), Büyük Dil Modellerinin (LLM) harici veri kaynaklarına (dosyalar, veritabanları, API'lar) ve araçlara (tools) standart bir şekilde erişmesini sağlayan açık bir protokoldür. CTI süreçlerinde bu teknoloji, dağınık güvenlik verilerini (SIEM, EDR, Threat Intel Feed) tek bir yapay zeka ajanı altında toplama potansiyeline sahiptir. Ancak, bu mimari; **Indirect Prompt Injection**, **Unauthorized Tool Execution** ve **Data Exfiltration via LLM Context** gibi yeni nesil tehdit vektörlerini beraberinde getirmektedir.
 
-2026’nın en önemli CTI operasyon gelişmelerinden biri teknik bir araçtan değil, bir **paradigma değişikliğinden** geliyor: **Model Context Protocol (MCP)** sunucuları, yapay zeka modellerini gerçek zamanlı tehdit istihbaratı platformlarına bağlıyor.
+## 3. Tehdit Tanımı ve Problem
+**Problem:** Geleneksel CTI süreçleri, verinin çok çeşitli kaynaklarda (fragmented) olması nedeniyle yavaştır. AI-Destekli CTI, bu veriyi hızlandırmak için MCP kullanarak "Agentic" (eylem alabilen) yapılar kurmaktadır.
+**Tehdit:** Bir saldırganın, MCP sunucularına erişebilen bir LLM ajanı üzerinden, dolaylı komut enjeksiyonu (Indirect Prompt Injection) yoluyla kritik güvenlik altyapılarına (örneğin bir EDR'a komut gönderme veya hassas logları okuma) yetkisiz erişim sağlamasıdır.
 
-Bu entegrasyon, analist iş akışını köklü biçimde hızlandırırken aynı anda henüz olgunlaşmamış yeni bir saldırı yüzeyi yaratıyor.
+**Hedeflenen Varlıklar:**
+* SOC Analistlerinin kullandığı AI Asistanları.
+* MCP Sunucuları (Local veya Remote).
+* Entegre edilmiş güvenlik araçları (SIEM, SOAR, EDR, Cloud Logs).
 
-## Problem: Context Gap — Analistin En Büyük Düşmanı
+## 4. Etkilenen Sistemler ve Cihazlar
+* **AI Orchestrators:** LLM tabanlı karar verici mekanizmalar.
+* **MCP Servers:** Veri kaynağı ve araç sağlayıcı sunucular (Python/Node.js tabanlı).
+* **Security Infrastructure:** Endpoint, Network ve Cloud ortamlarındaki API uç noktaları.
+* **Data Lakes/SIEM:** Analiz edilen ham veri kaynakları.
 
-AbuseIPDB → GreyNoise → MISP → Feodo Tracker…  
-Tek bir gösterge için bile 15 dakika süren pivot zincirleri, vardiyalarda ve yüzlerce IoC içeren soruşturmalarda ciddi zaman kaybına yol açıyor. Bu yorucu döngünün adı: **Bağlam Açığı (Context Gap)**.
+## 5. Teknik Detaylar
+MCP mimarisi üç ana bileşenden oluşur: **Host (LLM Client), Client, ve Server**.
 
-MCP sunucuları işte bu açığı kapatmayı hedefliyor.
+### MITRE ATT&CK Eşleştirmeleri 
+| Teknik | MITRE ID | Açıklama |
+| :--- | :--- | :--- |
+| **Indirect Prompt Injection** | *New/Emerging* | Saldırganın, MCP aracılığıyla okunan bir dokümana (örn. bir phishing maili) gizli talimatlar yerleştirerek AI ajanını manipüle etmesi. |
+| **Unauthorized Tool Use** | T1566 (Mod) | AI ajanının, yetki dışı bir MCP tool'unu (örn. `delete_log_entry`) çalıştırması. |
+| **Data Exfiltration** | T1041 | AI ajanı aracılığıyla, MCP üzerinden erişilen hassas verilerin LLM context'ine aktarılıp dışarı sızdırılması. |
 
-## MCP Nedir? — Teknik Temel
+## 6. Saldırı Zinciri 
+1.  **Initial Access:** Saldırganın, MCP sunucusunun okuduğu bir veri kaynağına (doküman, web sayfası, email) zararlı talimat yerleştirmesi.
+2.  **Execution (Prompt Injection):** AI ajanı, MCP üzerinden bu veriyi okuduğunda, talimatı "sistem komutu" olarak algılar.
+3.  **Persistence:** AI ajanı üzerinden MCP araçlarını kullanarak sistemde yeni yetkili kullanıcılar veya API key'ler oluşturulması.
+4.  **Defense Evasion:** AI ajanı aracılığıyla, güvenlik loglarının (SIEM) MCP üzerinden manipüle edilmesi veya temizlenmesi.
+5.  **Exfiltration:** Hassas verilerin, AI yanıtları (responses) içine gömülerek saldırganın izleyebileceği bir kanala (örn. bir webhook) aktarılması.
 
-Bir MCP sunucusu, yapay zeka modeline araçlar, veri kaynakları ve iş akışı şablonları sunan bir programdır.
+## 7. Tehdit Aktörü
+* **Profil:** Gelişmiş Tehdit Aktörleri (APT) ve AI-Automated Malware geliştiricileri.
+* **Motivasyon:** Casusluk (Espionage), Veri Hırsızlığı, Güvenlik Altyapısını Felç Etme.
+* **TTP'ler:** Prompt Engineering, Automated Reconnaissance, Tool-Use Exploitation.
 
-```mermaid
-graph TD
-    A[Analist Promptu] --> B[AI Modeli]
-    B --> C[MCP Orchestrator]
-    C --> D[VirusTotal]
-    C --> E[MISP]
-    C --> F[AbuseIPDB]
-    D & E & F --> G[Birleşik STIX Raporu → OpenCTI Push]
-```
-MISP MCP sunucusu, AI modelinize MISP galaxy’leri (tehdit aktörleri, zararlı yazılımlar, araç eşlemeleri) ve gerçek dünya sightings verilerine erişim sağlar.
+## 8. IoC 
+*MCP mimarisi için IoC'ler geleneksel hash'lerden ziyade davranışsal izlerdir:*
+* **Anomalous Tool Calls:** Bir AI ajanı tarafından normal dışı frekansta veya sıklıkta çağrılan MCP tool'ları.
+* **Context Overflow/Manipulation:** LLM sistem mesajlarında (system prompt) ani ve açıklanamayan değişiklikler.
+* **Unexpected Outbound Traffic:** MCP sunucularından veya AI Host'tan, tanımlanmamış dış IP/Domain'lere giden API istekleri.
+* **Large Context Windows:** Bir seferde aşırı miktarda veri okumaya çalışan (exfiltration belirtisi) MCP sorguları.
 
-## Kazanımlar
+## 9. Detection 
+* **SIEM Use-Case:** MCP sunucu loglarında "Tool Call" başarısızlıklarının ve yetkisiz erişim denemelerinin izlenmesi.
+* **EDR/XDR Detection:** MCP sunucusunu çalıştıran process'lerin (Python, Node.js) ağ aktivitelerindeki anomalilerin takibi.
+* **LLM Guardrails:** Girdi ve çıktıların (Input/Output) içerdiği "malicious instruction" paternlerinin (Regex, NLP tabanlı) tespiti.
+* **Audit Logs:** MCP sunucularının hangi veri kaynaklarına (Files, DB, API) eriştiğinin immutable loglarının tutulması.
 
-- **Ölçekte Hız**: Gösterge başına 15 dakika süren pivot zincirleri ve araştırmalar saniyelere iniyor. Analistleri daha üst düzey analitik çalışmalar için serbest bırakıyor.
-- **Sentezlenmiş Bağlam**: Beş ayrı sekmeden ham veri toplamak yerine, raporlamaya hazır yapılandırılmış ve tutarlı bir istihbarat tablosu elde ediliyor.
-- **Yapılandırılmış Çıktılar**: STIX ve JSON formatında hazır çıktılar sayesinde AI destekli istihbarat, mevcut sistemlere (OpenCTI, SIEM vb.) sorunsuz entegre edilebiliyor.
+## 10. Mitigation & Defense
+* **Kısa Vadeli:**
+    * **Least Privilege:** Her MCP sunucusuna sadece ihtiyaç duyduğu minimum veri setine erişim yetkisi verilmesi.
+    * **Human-in-the-loop (HITL):** Kritik "Write" veya "Delete" işlemlerinde AI ajanının onay mekanizmasına tabi tutulması.
+* **Uzun Vadeli:**
+    * **Sandboxing:** MCP sunucularının izole edilmiş (containerized) ortamlarda çalıştırılması.
+    * **Strict Schema Validation:** MCP tool çıktıları ve girdileri için katı veri tipi ve şema kontrolü.
+    * **Prompt Sanitization:** Girdi verilerinin, ajanı manipüle etmesini önleyecek şekilde temizlenmesi.
 
-## Yeni Saldırı Yüzeyi — Kritik Güvenlik Sorunları
+## 11. Incident Response
+1.  **Containment:** Etkilenen MCP sunucusunun ağ erişiminin kesilmesi ve AI ajanı oturumunun sonlandırılması.
+2.  **Eradication:** Zararlı talimat içeren veri kaynaklarının (dokümanlar, mail trafiği) temizlenmesi; MCP konfigürasyonlarının geri yüklenmesi.
+lama.
+3.  **Recovery:** Güvenli bir snapshot üzerinden MCP servislerinin ayağa kaldırılması ve yetki denetimi (IAM audit).
 
-MCP entegrasyonu büyük kazanımlar getirirken, aynı zamanda henüz yeterince belgelenmemiş yeni bir saldırı yüzeyi yaratıyor. Bazı vektörler aktif olarak gözlemlenmeye başlandı.
+## 12. Risk ve Etki Analizi
+* **İş Sürekliliği:** Yüksek (Güvenlik otomasyonunun devre dışı kalması operasyonel körlüğe yol açabilir).
+* **Veri Güvenliği:** Kritik (Hassas siber güvenlik verilerinin ve kurumsal sırların sızma riski).
+* **Kurumsal Risk:** Yüksek (AI tabanlı karar mekanizmalarının güven kaybı, tüm savunma hattını etkiler).
 
-### Saldırı Vektörleri
+## 13. İstihbarat Değeri
+Bu analiz, organizasyonun **AI Güvenlik Stratejisi** için temel teşkil eder. SOC ekiplerinin, sadece geleneksel malware'lere değil, **Agentic AI** ekosistemindeki yeni saldırı vektörlerine karşı hazırlıklı olmasını sağlar. Threat Hunting ekipleri için MCP loglarını yeni bir "hunting ground" (av sahası) olarak tanımlar.
 
-1. **Truva Atlı MCP Sunucusu**  
-   Sahte veya ele geçirilmiş bir MCP sunucusu, AI modeline yanlış IoC verileri besleyebilir, yanlış attribution yapılmasına neden olabilir veya gerçek tehdit verilerini gizleyebilir.
-
-2. **Pasif Prompt Injection**  
-   Tehdit raporlarına veya web sayfalarına gömülen gizli talimatlar, AI’ın araştırma yönünü değiştirebilir veya hassas veri sızdırabilir.
-
-3. **AI-in-the-Middle **  
-   MCP trafiği ağ düzeyinde şifrelenmediğinde, ortadaki bir aktör (Man-in-the-Middle) AI’ın aldığı tehdit istihbaratını manipüle edebilir.
-
-   ## Temel Güvenlik Prensipleri
-
-```markdown
-✅ Her MCP sunucusunu bağımsız olarak doğrula
-✅ MCP trafiği için TLS zorunlu kıl
-✅ AI tarafından üretilen STIX çıktılarını insan gözden geçirmesine tabi tut
-✅ MCP sorgularını ve yanıtlarını SIEM’de logla
-✅ Her MCP sunucusu için en az ayrıcalık prensibi uygula
-
-❌ Güvenilmeyen MCP sunucularına MISP kimlik bilgilerini verme
-❌ AI çıktısını doğrulamadan otomatik IDS kuralı olarak yükleme
-```
-
-## Önerilen MCP Sunucuları
-
-| Araç                    | Kapsam                              | Notlar                          |
-|-------------------------|-------------------------------------|---------------------------------|
-| MISP MCP                | Topluluk IoC + Galaxy               | Özel istihbarat için birincil   |
-| MCP-ThreatIntel         | VirusTotal + AbuseIPDB              | Genel zenginleştirme            |
-| fastmcp-threatintel     | Feodo Tracker + Botnet C2           | Pivot analizi                   |
-| GreyNoise MCP           | Mass scanner tespiti                | Gürültü azaltma                 |
-
-## CTI Analisti İçin Pratik Öneri
-
-MCP sunucularını “değerlendirilecek bir özellik” olarak değil, **anlaşılması, yönetilmesi ve güvence altına alınması gereken altyapı** olarak ele almak gerekiyor. 
-
-Bu alanı standart pratik haline gelmeden önce anlayan analistler önemli avantaj sağlayacak.
-
-## Hızlı Başlangıç
-```bash
-# MISP MCP örnek entegrasyon
-from mcp_client import MCPClient
-import os
-
-client = MCPClient(
-    server="misp-mcp-server",
-    auth_token=os.getenv("MISP_TOKEN"),
-    tls_verify=True  # Zorunlu
-)
-
-# IoC pivot sorgusu
-result = client.query(
-    tool="misp_search",
-    params={"value": "185.220.101.45", "type": "ip-src"}
-)
-```
-
-## Kaynaklar
-
-| # | Kaynak                                      | Tür                  | URL |
-|---|---------------------------------------------|----------------------|-----|
-| 1 | MCP Servers for CTI in 2026                 | Kapsamlı Analiz      | [https://kravensecurity.com/mcp-servers-for-cti/](https://kravensecurity.com/mcp-servers-for-cti/) |
-| 2 | GitHub — MCP-ThreatIntel                    | Araç                 | [https://github.com/mrfakename/mcp-threatintel](https://github.com/mrfakename/mcp-threatintel) |
-| 3 | MISP MCP Server                             | Araç                 | [https://github.com/MISP/misp-mcp](https://github.com/MISP/misp-mcp) |
-| 4 | Model Context Protocol Spec                 | Protokol Dok.        | [https://modelcontextprotocol.io](https://modelcontextprotocol.io) |
-| 5 | MISP Project Blog                           | Genel                | [https://www.misp-project.org/blog/](https://www.misp-project.org/blog/) |
-| 6 | OpenCTI XTM Uzantısı (AI+MCP örneği)        | Ürün                 | [https://filigran.io/filigran-xtm-browser-extension/](https://filigran.io/filigran-xtm-browser-extension/) |
+## 14. Sonuç ve Değerlendirme
+MCP-Sunucuları ile AI-Destekli CTI, savunma tarafında devrim niteliğinde bir yetenek sunsa da, "untrusted input" (güvenilmeyen girdi) riskini kritik seviyeye çıkarmaktadır. Organizasyonlar, bu teknolojiyi benimserken **"Zero Trust"** prensibini MCP mimarisine de uygulamalıdır.
 
 ---
 
-© 2025 AltHack Security — Gerçek Dünya Siber Güvenlik İstihbaratı
+*© 2025 AltHack Security — Gerçek Dünya Siber Güvenlik İstihbaratı*
